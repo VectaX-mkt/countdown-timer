@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Timer de Contagem Regressiva</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 100px;
+      background-color: #f7f7f7;
+    }
+    #countdown {
+      font-size: 48px;
+      color: #222;
+    }
+  </style>
+</head>
+<body>
+  <h1>Contagem Regressiva para o Evento</h1>
+  <div id="countdown"></div>
+
+  <script>
+    // Defina a data do evento (ano, mês - 1, dia, hora, minuto, segundo)
+    const targetDate = new Date("2025-07-17T18:00:00").getTime();
+
+    const countdown = () => {
+      const now = new Date().getTime();
+      const timeLeft = targetDate - now;
+
+      if (timeLeft <= 0) {
+        document.getElementById("countdown").innerHTML = "O evento começou!";
+        clearInterval(timer);
+        return;
+      }
+
+      const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+      const seconds = Math.floor((timeLeft / 1000) % 60);
+
+      document.getElementById("countdown").innerHTML = `
+        ${days}d ${hours}h ${minutes}m ${seconds}s
+      `;
+    };
+
+    const timer = setInterval(countdown, 1000);
+  </script>
+</body>
+</html>
