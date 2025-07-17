@@ -1,69 +1,150 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <title>Timer ClickDigital</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contagem Regressiva</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
-    body {
+    * {
       margin: 0;
       padding: 0;
-      background-color: #0033ff;
-      color: #fff;
-      font-family: 'Montserrat', Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100px;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      font-family: 'Orbitron', sans-serif;
+      background: transparent;
       width: 100%;
-      text-align: center;
+      height: 100%;
     }
 
-    #countdown {
-      font-size: 2.5em;
-      font-weight: bold;
+    .layout {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: clamp(8px, 3vw, 20px);
+      padding: 0.5em 1em;
+      width: 100%;
+      background-color: #2a00d4; /* Azul roxo da faixa */
     }
 
-    @media (max-width: 768px) {
-      #countdown {
-        font-size: 1.5em;
-      }
+    .circle-wrapper {
+      position: relative;
+      width: clamp(40px, 15vw, 70px); /* MENOR círculo */
+      height: clamp(40px, 15vw, 70px);
     }
 
-    @media (max-width: 480px) {
-      #countdown {
-        font-size: 1.2em;
-      }
+    svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .circle-bg {
+      fill: none;
+      stroke: #e6e6e6;
+      stroke-width: 8;
+    }
+
+    .circle {
+      fill: none;
+      stroke: #00C8FF;
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 314;
+      stroke-dashoffset: 314;
+      transition: stroke-dashoffset 1s linear;
+    }
+
+    .countdown-section {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-width: 100px;
+    }
+
+    .time-display {
+      font-size: clamp(1rem, 4vw, 1.5rem);
+      color: #ffffff;
+      margin-bottom: 2px;
+    }
+
+    .label {
+      font-size: clamp(0.6rem, 2vw, 0.8rem);
+      color: #cfcfff;
+    }
+
+    .whatsapp-btn {
+      padding: 8px 14px;
+      background-color: #25D366;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease;
+    }
+
+    .whatsapp-btn:hover {
+      background-color: #1ebe5d;
     }
   </style>
 </head>
 <body>
-  <div id="countdown">00d 00h 00m 00s</div>
+  <div class="layout">
+    <!-- Esquerda: Círculo animado -->
+    <div class="circle-wrapper">
+      <svg>
+        <circle class="circle-bg" cx="60" cy="60" r="50"></circle>
+        <circle id="progress-circle" class="circle" cx="60" cy="60" r="50"></circle>
+      </svg>
+    </div>
+
+    <!-- Centro: Tempo e legenda -->
+    <div class="countdown-section">
+      <div class="time-display" id="time-text">00d 00h 00min</div>
+      <div class="label">para o ClickDigital</div>
+    </div>
+
+    <!-- Direita: Botão WhatsApp -->
+    <a href="https://wa.me/5584988123456" target="_blank" class="whatsapp-btn">Fale no WhatsApp</a>
+  </div>
 
   <script>
-    // Data final: 22 de agosto de 2025 às 12h
-    const targetDate = new Date("2025-08-22T12:00:00").getTime();
+    const targetDate = new Date("2025-08-22T00:00:00").getTime();
+    const circle = document.getElementById("progress-circle");
+    const timeText = document.getElementById("time-text");
 
-    const countdown = () => {
+    function updateTimer() {
       const now = new Date().getTime();
-      const timeLeft = targetDate - now;
+      const distance = targetDate - now;
+      const totalSeconds = distance / 1000;
 
-      if (timeLeft <= 0) {
-        document.getElementById("countdown").innerHTML = "O evento começou!";
-        clearInterval(timer);
+      if (distance < 0) {
+        timeText.innerHTML = "00d 00h 00min";
+        circle.style.strokeDashoffset = 314;
         return;
       }
 
-      const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
-      const seconds = Math.floor((timeLeft / 1000) % 60);
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
 
-      document.getElementById("countdown").innerHTML =
-        `${days}d ${hours}h ${minutes}m ${seconds}s`;
-    };
+      timeText.innerHTML = `${String(days).padStart(2, '0')}d ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}min`;
 
-    const timer = setInterval(countdown, 1000);
+      const maxTime = 60 * 60 * 24 * 30; // 30 dias
+      const percent = totalSeconds / maxTime;
+      const dashoffset = 314 * (1 - percent);
+      circle.style.strokeDashoffset = dashoffset;
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer();
   </script>
 </body>
 </html>
