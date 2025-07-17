@@ -34,11 +34,13 @@
 
     }
 
-    .circle-wrapper {
+       .circle-wrapper {
       position: relative;
-      width: clamp(40px, 15vw, 70px); /* MENOR círculo */
+      width: clamp(40px, 15vw, 70px);
       height: clamp(40px, 15vw, 70px);
+      margin-top: -6px; /* corrige o desnível do círculo */
     }
+
 
     svg {
       width: 100%;
