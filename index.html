@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>Timer ClickDigital</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -13,142 +13,210 @@
     }
 
     html, body {
-      font-family: 'Orbitron', sans-serif;
+      font-family: 'Inter', sans-serif;
       background: transparent;
       width: 100%;
       height: 100%;
     }
-  
-       .layout {
+
+    .timer-container {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+      padding: 16px 24px;
+      border-radius: 12px;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
       align-items: center;
-      gap: clamp(8px, 3vw, 20px);
-      padding: 0.5em 1em;
-      width: 100%;
-      background-color: #2a00d4;
-      border-top: 6px solid #ffffff22; /* borda branca semi-transparente */
-      box-sizing: border-box;
+      justify-content: space-between;
+      gap: 20px;
+      box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
+      max-width: 800px;
+      margin: 20px auto;
+      min-height: 80px;
     }
 
+    .timer-left {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex: 1;
     }
 
-       .circle-wrapper {
-      position: relative;
-      width: clamp(40px, 15vw, 70px);
-      height: clamp(40px, 15vw, 70px);
-      margin-top: -6px; /* corrige o desnível do círculo */
+    .event-text {
+      color: #ffffff;
+      font-size: clamp(14px, 2.5vw, 18px);
+      font-weight: 400;
+      white-space: nowrap;
     }
 
-
-    svg {
-      width: 100%;
-      height: 100%;
-      transform: rotate(-90deg);
+    .countdown-display {
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
 
-    .circle-bg {
-      fill: none;
-      stroke: #e6e6e6;
-      stroke-width: 8;
-    }
-
-    .circle {
-      fill: none;
-      stroke: #00C8FF;
-      stroke-width: 8;
-      stroke-linecap: round;
-      stroke-dasharray: 314;
-      stroke-dashoffset: 314;
-      transition: stroke-dashoffset 1s linear;
-    }
-
-    .countdown-section {
+    .time-unit {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      min-width: 100px;
+      align-items: center;
+      min-width: 50px;
     }
 
-    .time-display {
-      font-size: clamp(1rem, 4vw, 1.5rem);
+    .time-number {
       color: #ffffff;
-      margin-bottom: 2px;
+      font-size: clamp(24px, 5vw, 36px);
+      font-weight: 700;
+      line-height: 1;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
-    .label {
-      font-size: clamp(0.6rem, 2vw, 0.8rem);
-      color: #cfcfff;
+    .time-label {
+      color: #e0e7ff;
+      font-size: clamp(10px, 1.5vw, 12px);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
     }
 
-    .whatsapp-btn {
-      padding: 8px 14px;
-      background-color: #25D366;
-      color: #fff;
+    .separator {
+      color: #ffffff;
+      font-size: clamp(20px, 4vw, 28px);
+      font-weight: 700;
+      margin: 0 4px;
+      opacity: 0.7;
+    }
+
+    .cta-button {
+      background: #ffffff;
+      color: #6366f1;
+      padding: 12px 24px;
       border: none;
-      border-radius: 6px;
-      font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+      border-radius: 8px;
+      font-size: clamp(14px, 2vw, 16px);
+      font-weight: 600;
       cursor: pointer;
       text-decoration: none;
       white-space: nowrap;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
-    .whatsapp-btn:hover {
-      background-color: #1ebe5d;
+    .cta-button:hover {
+      background: #f8fafc;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .cta-button:active {
+      transform: translateY(0);
+    }
+
+    /* Responsividade para telas menores */
+    @media (max-width: 768px) {
+      .timer-container {
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px 16px;
+        text-align: center;
+      }
+
+      .timer-left {
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+      }
+
+      .countdown-display {
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .separator {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .countdown-display {
+        gap: 8px;
+      }
+
+      .time-unit {
+        min-width: 40px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="layout">
-    <!-- Esquerda: Círculo animado -->
-    <div class="circle-wrapper">
-      <svg>
-        <circle class="circle-bg" cx="60" cy="60" r="50"></circle>
-        <circle id="progress-circle" class="circle" cx="60" cy="60" r="50"></circle>
-      </svg>
+  <div class="timer-container">
+    <div class="timer-left">
+      <div class="event-text">O evento começa em:</div>
+      
+      <div class="countdown-display">
+        <div class="time-unit">
+          <div class="time-number" id="days">00</div>
+          <div class="time-label">DIAS</div>
+        </div>
+        
+        <div class="separator">:</div>
+        
+        <div class="time-unit">
+          <div class="time-number" id="hours">00</div>
+          <div class="time-label">HRS</div>
+        </div>
+        
+        <div class="separator">:</div>
+        
+        <div class="time-unit">
+          <div class="time-number" id="minutes">00</div>
+          <div class="time-label">MIN</div>
+        </div>
+        
+        <div class="separator">:</div>
+        
+        <div class="time-unit">
+          <div class="time-number" id="seconds">00</div>
+          <div class="time-label">SEG</div>
+        </div>
+      </div>
     </div>
 
-    <!-- Centro: Tempo e legenda -->
-    <div class="countdown-section">
-      <div class="time-display" id="time-text">00d 00h 00min</div>
-      <div class="label">para o ClickDigital</div>
-    </div>
-
-    <!-- Direita: Botão WhatsApp -->
-    <a href="https://wa.me/5584988123456" target="_blank" class="whatsapp-btn">Fale no WhatsApp</a>
+    <a href="https://wa.me/5584988123456" target="_blank" class="cta-button">
+      Garantir ingresso
+    </a>
   </div>
 
   <script>
     const targetDate = new Date("2025-08-22T00:00:00").getTime();
-    const circle = document.getElementById("progress-circle");
-    const timeText = document.getElementById("time-text");
+    
+    const daysElement = document.getElementById("days");
+    const hoursElement = document.getElementById("hours");
+    const minutesElement = document.getElementById("minutes");
+    const secondsElement = document.getElementById("seconds");
 
     function updateTimer() {
       const now = new Date().getTime();
       const distance = targetDate - now;
-      const totalSeconds = distance / 1000;
 
       if (distance < 0) {
-        timeText.innerHTML = "00d 00h 00min";
-        circle.style.strokeDashoffset = 314;
+        daysElement.innerHTML = "00";
+        hoursElement.innerHTML = "00";
+        minutesElement.innerHTML = "00";
+        secondsElement.innerHTML = "00";
         return;
       }
 
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      timeText.innerHTML = `${String(days).padStart(2, '0')}d ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}min`;
-
-      const maxTime = 60 * 60 * 24 * 30; // 30 dias
-      const percent = totalSeconds / maxTime;
-      const dashoffset = 314 * (1 - percent);
-      circle.style.strokeDashoffset = dashoffset;
+      daysElement.innerHTML = String(days).padStart(2, '0');
+      hoursElement.innerHTML = String(hours).padStart(2, '0');
+      minutesElement.innerHTML = String(minutes).padStart(2, '0');
+      secondsElement.innerHTML = String(seconds).padStart(2, '0');
     }
 
+    // Atualiza o timer a cada segundo
     setInterval(updateTimer, 1000);
     updateTimer();
   </script>
